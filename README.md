@@ -1,6 +1,6 @@
 # E-commerce API Backend
 
-This project is an API backend for an e-commerce website built using **Node.js**. It supports multiple user roles, each with specific permissions and functionalities. The roles include **Admin**, **Staff**, **Vendor**, and **Buyer**. The project allows users to register, view products, add products, and manage the product catalog based on their role in the system.
+This project is an API backend for an e-commerce website built using **Node.js** and **MongoDB**. It supports multiple user roles, each with specific permissions and functionalities. The roles include **Admin**, **Staff**, **Vendor**, and **Buyer**. The project allows users to register, view products, add products, and manage the product catalog based on their role in the system.
 
 ## Project Overview
 
@@ -33,11 +33,14 @@ The API facilitates the following core functionalities:
 
 ## Database
 
-- The backend uses a **MySQL** database to store information about users, vendors, staff, products, etc.
-- **Important Tables**:
-  - **Users**: For storing user details (name, email, password, role).
-  - **Products**: For storing product details (name, description, price, start date, expiry date, vendor ID, etc.).
-  - **Roles**: For storing user roles and permissions.
+- The backend uses **MongoDB** to store information about users, vendors, staff, products, etc.
+- The database is designed with collections for users, products, and roles.
+
+### Key Collections:
+
+- **Users**: Stores user details (name, email, password, role).
+- **Products**: Stores product details (name, description, price, start date, expiry date, vendor ID, etc.).
+- **Roles**: Stores user roles and permissions.
 
 ## Features
 
@@ -64,7 +67,7 @@ The API facilitates the following core functionalities:
 ### Prerequisites
 
 - **Node.js** installed on your machine.
-- **MySQL** database setup.
+- **MongoDB** database (local or cloud).
 - **Postman** to test the API endpoints.
 
 ### Setup
@@ -81,22 +84,14 @@ The API facilitates the following core functionalities:
    npm install
    ```
 
-3. **Database Configuration**:
-   - Create a **MySQL** database and configure the credentials in `.env` file:
+3. **MongoDB Configuration**:
+   - Make sure MongoDB is installed and running on your local machine or use a cloud MongoDB service like **MongoDB Atlas**.
+   - Configure the MongoDB connection in the `.env` file:
+     ```env
+     MONGO_URI=mongodb://localhost:27017/ecommerce_db
      ```
-     DB_HOST=localhost
-     DB_USER=root
-     DB_PASSWORD=password
-     DB_NAME=ecommerce_db
-     ```
-   
-4. **Migrate the Database**:
-   Run the SQL script `db-schema.sql` to create the necessary tables in the database:
-   ```bash
-   mysql -u root -p < db-schema.sql
-   ```
 
-5. **Run the Application**:
+4. **Run the Application**:
    Start the server by running:
    ```bash
    npm start
@@ -115,7 +110,7 @@ The API facilitates the following core functionalities:
 - **DELETE /products/:id**: Delete a product (Admin/Staff).
 - **GET /users**: Get all users (Admin only).
 - **POST /users**: Create a new user (Admin only).
-  
+
 ### Example Postman Collection
 
 Included in the repository is a **Postman collection** to test the various API endpoints. You can import this collection into Postman for easier testing.
@@ -128,32 +123,36 @@ Included in the repository is a **Postman collection** to test the various API e
 
 ## Database Schema
 
-The database schema for this project is provided in the `db-schema.sql` file, which includes the creation of necessary tables such as `Users`, `Roles`, `Products`, etc.
+The MongoDB database uses collections for **Users** and **Products**. Below is an overview of the database schema.
 
-### Example SQL Schema
+### Users Collection
 
-```sql
-CREATE TABLE Users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
-    password VARCHAR(255),
-    role ENUM('admin', 'staff', 'vendor', 'buyer'),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+```json
+{
+  "_id": ObjectId,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "hashed_password",
+  "role": "buyer", // Can be 'admin', 'staff', 'vendor', or 'buyer'
+  "createdAt": ISODate("2023-01-01T00:00:00Z")
+}
+```
 
-CREATE TABLE Products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    description TEXT,
-    price DECIMAL(10, 2),
-    old_price DECIMAL(10, 2),
-    start_date DATETIME,
-    expiry_date DATETIME,
-    delivery_amount DECIMAL(10, 2),
-    free_delivery BOOLEAN,
-    vendor_id INT,
-    UNIQUE (name),
-    FOREIGN KEY (vendor_id) REFERENCES Users(id)
-);
+### Products Collection
+
+```json
+{
+  "_id": ObjectId,
+  "name": "Product Name",
+  "description": "Product description",
+  "price": 100.00,
+  "old_price": 150.00,
+  "start_date": ISODate("2023-01-01T00:00:00Z"),
+  "expiry_date": ISODate("2023-01-08T00:00:00Z"),
+  "delivery_amount": 10.00,
+  "free_delivery": false,
+  "vendor_id": ObjectId("vendor_object_id"),
+  "image_url": "https://example.com/image.jpg",
+  "unique_url": "product-unique-url"
+}
 ```
