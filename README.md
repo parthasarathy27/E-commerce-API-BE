@@ -94,7 +94,7 @@ The API facilitates the following core functionalities:
 4. **Run the Application**:
    Start the server by running:
    ```bash
-   npm start
+   npm run dev
    ```
 
    The server should now be running on `http://localhost:3000`.
@@ -147,8 +147,8 @@ The MongoDB database uses collections for **Users** and **Products**. Below is a
   "description": "Product description",
   "price": 100.00,
   "old_price": 150.00,
-  "start_date": ISODate("2023-01-01T00:00:00Z"),
-  "expiry_date": ISODate("2023-01-08T00:00:00Z"),
+  "start_date": ISODate("2025-01-01T00:00:00Z"),
+  "expiry_date": ISODate("2025-01-08T00:00:00Z"),
   "delivery_amount": 10.00,
   "free_delivery": false,
   "vendor_id": ObjectId("vendor_object_id"),
